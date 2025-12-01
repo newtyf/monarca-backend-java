@@ -1,6 +1,7 @@
 package com.monarca.backend.service;
 
 import com.monarca.backend.dto.CitaDTO;
+import com.monarca.backend.dto.CitaConClienteDTO;
 
 import java.util.List;
 
@@ -21,4 +22,9 @@ public interface CitaService {
     List<CitaDTO> findByClienteEmail(String email);
 
     List<CitaDTO> findByEstado(String estado);
+    
+    // Métodos con relaciones
+    List<CitaConClienteDTO> findAllConCliente();
+    
+    CitaConClienteDTO findByIdConCliente(Long id);
 }

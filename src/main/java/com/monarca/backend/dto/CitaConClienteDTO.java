@@ -1,45 +1,20 @@
-package com.monarca.backend.model;
+package com.monarca.backend.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "citas")
-public class Cita {
+public class CitaConClienteDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cita")
     private Long idCita;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
-
-    @Column(name = "id_servicio")
+    private ClienteDTO cliente;
     private Integer idServicio;
-
-    @Column(name = "id_user", nullable = true)
     private Integer idUser;
-
-    @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
-
     private Integer duracionEstimada;
-
     private String estado;
-
-    @Column(columnDefinition = "TEXT")
     private String notas;
 
-    private LocalDateTime fechaCreacion;
-
-    private LocalDateTime fechaActualizacion;
-
-    public Cita() {
+    public CitaConClienteDTO() {
     }
-
-    // getters and setters
 
     public Long getIdCita() {
         return idCita;
@@ -49,11 +24,11 @@ public class Cita {
         this.idCita = idCita;
     }
 
-    public Cliente getCliente() {
+    public ClienteDTO getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(ClienteDTO cliente) {
         this.cliente = cliente;
     }
 
@@ -103,21 +78,5 @@ public class Cita {
 
     public void setNotas(String notas) {
         this.notas = notas;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public LocalDateTime getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
     }
 }

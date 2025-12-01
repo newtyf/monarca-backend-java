@@ -1,6 +1,7 @@
 package com.monarca.backend.controller;
 
 import com.monarca.backend.dto.CitaDTO;
+import com.monarca.backend.dto.CitaConClienteDTO;
 import com.monarca.backend.service.CitaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/citas")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CitaController {
 
     private final CitaService citaService;
@@ -30,9 +32,31 @@ public class CitaController {
     }
 
     @PostMapping
-    public ResponseEntity<CitaDTO> create(@RequestBody CitaDTO dto) {
-        CitaDTO created = citaService.create(dto);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<?> create(@RequestBody CitaDTO dto) {
+        try {
+            CitaDTO created = citaService.create(dto);
+            return ResponseEntity.ok(created);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Error al crear la cita: " + e.getMessage()));
+        }
+    }
+    
+    private static class ErrorResponse {
+        private String error;
+        
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
+        
+        public String getError() {
+            return error;
+        }
+        
+        public void setError(String error) {
+            this.error = error;
+        }
     }
 
     @PutMapping("/{id}")
@@ -61,5 +85,18 @@ public class CitaController {
     @GetMapping("/estado")
     public List<CitaDTO> findByEstado(@RequestParam("estado") String estado) {
         return citaService.findByEstado(estado);
+    }
+    
+    // Endpoints con relaciones
+    @GetMapping("/con-cliente")
+    public List<CitaConClienteDTO> listConCliente() {
+        return citaService.findAllConCliente();
+    }
+    
+    @GetMapping("/{id}/con-cliente")
+    public ResponseEntity<CitaConClienteDTO> getConCliente(@PathVariable Long id) {
+        CitaConClienteDTO dto = citaService.findByIdConCliente(id);
+        if (dto == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dto);
     }
 }
